@@ -1,0 +1,19 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: redis-rate-limiter
+          uri: http://localhost:8080
+          predicates:
+            - Path=/hello/hello2
+          filters:
+            - StripPrefix=1
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@uriKeyResolver}"
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+  redis:
+    host: 192.168.57.120
+    port: 6379
+    password: 123456
